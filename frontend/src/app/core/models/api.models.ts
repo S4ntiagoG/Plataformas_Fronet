@@ -66,6 +66,65 @@ export interface ServiceOrderRequest {
 export interface ServiceOrderResponse extends ServiceOrderRequest {
   id: number;
   vehicle: VehicleResponse;
+  status?: 'LISTO' | 'EN PROGRESO' | 'PENDIENTE';
+}
+
+export type WorkOrderStatus = 'LISTO' | 'EN PROGRESO' | 'PENDIENTE';
+
+export interface WorkOrderTask {
+  id: number;
+  description: string;
+  completed: boolean;
+}
+
+export interface WorkOrderPart {
+  id: number;
+  name: string;
+  partNumber: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface WorkOrderLabor {
+  id: number;
+  description: string;
+  hours: number;
+  rate: number;
+}
+
+export interface WorkOrderResponse {
+  id: number;
+  orderNumber: string;
+  status: WorkOrderStatus;
+  diagnosis: string;
+  entryDate: string;
+  currentMileage: number;
+  primaryReason: string;
+  customerObservations: string;
+  vehicle: {
+    id: number;
+    plate: string;
+    brand: string;
+    model: string;
+    vehicleYear: number;
+    ownerName: string;
+  };
+  tasks: WorkOrderTask[];
+  parts: WorkOrderPart[];
+  labor: WorkOrderLabor[];
+  partsSubtotal: number;
+  laborSubtotal: number;
+  supplies: number;
+  tax: number;
+  total: number;
+}
+
+export interface WorkOrderUpdateRequest {
+  status: WorkOrderStatus;
+  diagnosis: string;
+  tasks: Array<Pick<WorkOrderTask, 'description' | 'completed'>>;
+  parts: Array<Pick<WorkOrderPart, 'name' | 'partNumber' | 'quantity' | 'unitPrice'>>;
+  labor: Array<Pick<WorkOrderLabor, 'description' | 'hours' | 'rate'>>;
 }
 
 export interface ServiceOrderUpdateRequest {

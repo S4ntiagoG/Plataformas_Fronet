@@ -23,7 +23,7 @@ export class VehicleMechanicService {
           return [];
         }
 
-        return vehicles.map((v, index): MechanicVehicleItem => {
+        return vehicles.map((v): MechanicVehicleItem => {
           // Buscar última orden de servicio para este vehículo en la base de datos
           const vehicleOrders = (orders || []).filter((o) => o.vehicle?.id === v.id);
           const latestOrder = vehicleOrders.sort((a, b) =>
@@ -38,9 +38,10 @@ export class VehicleMechanicService {
             }
           }
 
-          // Si el vehículo tiene orden de servicio, asigna estado según antigüedad o estado activo
-          const statuses: VehicleStatus[] = ['LISTO', 'EN PROGRESO', 'PENDIENTE'];
-          const status = latestOrder ? statuses[index % statuses.length] : 'PENDIENTE';
+          const knownStatuses: VehicleStatus[] = ['LISTO', 'EN PROGRESO', 'PENDIENTE'];
+          const status = knownStatuses.includes(latestOrder?.status as VehicleStatus)
+            ? latestOrder!.status as VehicleStatus
+            : latestOrder ? 'EN PROGRESO' : 'PENDIENTE';
 
           return {
             id: v.id,

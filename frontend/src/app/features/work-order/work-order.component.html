@@ -1,0 +1,177 @@
+<main class="workbench" [class.invoice-print-mode]="invoicePrintMode()">
+  @if (loading()) {
+    <p class="workbench-message">Cargando orden de trabajo...</p>
+  } @else if (order(); as currentOrder) {
+    <header class="workbench-header">
+      <div class="workbench-title">
+        <button type="button" class="back-button" (click)="goBack()" aria-label="Volver a vehículos" title="Volver a vehículos">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+        </button>
+        <div>
+          <div class="eyebrow">SERVICE ORDER #{{ currentOrder.orderNumber }}</div>
+          <h1>{{ currentOrder.vehicle.brand }} {{ currentOrder.vehicle.model }}</h1>
+          <div class="vehicle-caption">
+            <span>{{ currentOrder.vehicle.plate }}</span>
+            <span>{{ currentOrder.vehicle.vehicleYear }}</span>
+            <span>{{ currentOrder.vehicle.ownerName }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <label class="status-control">
+          <span class="visually-hidden">Estado de la orden</span>
+          <select [value]="currentOrder.status" (change)="updateStatus($event)" [attr.data-status]="currentOrder.status">
+            <option value="PENDIENTE">PENDIENTE</option>
+            <option value="EN PROGRESO">EN PROGRESO</option>
+            <option value="LISTO">LISTO</option>
+          </select>
+        </label>
+        <button type="button" class="button button--quiet" (click)="printOrder()" title="Imprimir orden">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z" /></svg>
+          <span>Print</span>
+        </button>
+      </div>
+    </header>
+
+    @if (error()) { <p class="feedback feedback--error" role="alert">{{ error() }}</p> }
+    @if (notice()) { <p class="feedback feedback--success" role="status">{{ notice() }}</p> }
+
+    <div class="workorder-layout">
+      <div class="workorder-main">
+        <section class="workorder-section diagnosis-section">
+          <div class="section-heading">
+            <h2><span class="heading-icon" aria-hidden="true">⌕</span> Initial Diagnosis</h2>
+            <span class="section-meta">{{ currentOrder.entryDate }} · {{ currentOrder.currentMileage }} km</span>
+          </div>
+          <textarea
+            class="diagnosis-input"
+            rows="3"
+            [value]="diagnosisDraft"
+            (input)="updateDiagnosis($event)"
+            aria-label="Diagnóstico inicial"
+            placeholder="Describe el diagnóstico y los hallazgos..."
+          ></textarea>
+          @if (currentOrder.primaryReason) {
+            <p class="customer-reason"><strong>Motivo de ingreso:</strong> {{ currentOrder.primaryReason }}</p>
+          }
+        </section>
+
+        <section class="workorder-section">
+          <div class="section-heading">
+            <h2><span class="heading-icon" aria-hidden="true">☷</span> Tasks Performed</h2>
+            <span class="section-meta">{{ currentOrder.tasks.length }} tareas</span>
+          </div>
+          <form class="add-row add-row--task" (submit)="addTask($event)">
+            <input [value]="taskDraft" (input)="taskDraft = $any($event.target).value" placeholder="Nueva tarea o revisión" aria-label="Descripción de la tarea" required>
+            <button type="submit" class="text-action">+ ADD TASK</button>
+          </form>
+          <ul class="task-list">
+            @for (task of currentOrder.tasks; track task.id) {
+              <li class="task-row" [class.task-row--complete]="task.completed">
+                <label class="task-label">
+                  <input type="checkbox" [checked]="task.completed" (change)="toggleTask(task.id, $any($event.target).checked)">
+                  <span>{{ task.description }}</span>
+                </label>
+                <button type="button" class="remove-button" (click)="removeTask(task.id)" [attr.aria-label]="'Eliminar tarea: ' + task.description" title="Eliminar tarea">×</button>
+              </li>
+            } @empty {
+              <li class="empty-row">Aún no hay tareas registradas.</li>
+            }
+          </ul>
+        </section>
+
+        <section class="workorder-section table-section">
+          <div class="section-heading">
+            <h2><span class="heading-icon" aria-hidden="true">◷</span> Parts &amp; Materials</h2>
+          </div>
+          <form class="add-row add-row--part" (submit)="addPart($event)">
+            <input [value]="partNameDraft" (input)="partNameDraft = $any($event.target).value" placeholder="Nombre del repuesto" aria-label="Nombre del repuesto" required>
+            <input [value]="partNumberDraft" (input)="partNumberDraft = $any($event.target).value" placeholder="Referencia" aria-label="Referencia del repuesto">
+            <input type="number" min="1" step="1" [value]="partQuantityDraft" (input)="partQuantityDraft = +$any($event.target).value" aria-label="Cantidad" required>
+            <input type="number" min="0" step="0.01" [value]="partPriceDraft" (input)="partPriceDraft = +$any($event.target).value" aria-label="Precio unitario" required>
+            <button type="submit" class="text-action">+ ADD PART</button>
+          </form>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>PART NAME / NUMBER</th><th>CANTIDAD</th><th>PRECIO UNITARIO</th><th>SUBTOTAL</th><th><span class="visually-hidden">Acciones</span></th></tr></thead>
+              <tbody>
+                @for (part of currentOrder.parts; track part.id) {
+                  <tr>
+                    <td><strong>{{ part.name }}</strong><small>PN: {{ part.partNumber || '—' }}</small></td>
+                    <td>{{ part.quantity }}</td>
+                    <td>{{ formatMoney(part.unitPrice) }}</td>
+                    <td>{{ formatMoney(part.quantity * part.unitPrice) }}</td>
+                    <td><button type="button" class="remove-button" (click)="removePart(part.id)" [attr.aria-label]="'Eliminar repuesto: ' + part.name">×</button></td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="5" class="empty-row">No hay repuestos agregados.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="workorder-section table-section">
+          <div class="section-heading">
+            <h2><span class="heading-icon" aria-hidden="true">◷</span> Labor</h2>
+          </div>
+          <form class="add-row add-row--labor" (submit)="addLabor($event)">
+            <input [value]="laborDescriptionDraft" (input)="laborDescriptionDraft = $any($event.target).value" placeholder="Descripción del trabajo" aria-label="Descripción del trabajo" required>
+            <input type="number" min="0.01" step="0.25" [value]="laborHoursDraft" (input)="laborHoursDraft = +$any($event.target).value" aria-label="Horas" required>
+            <input type="number" min="0" step="0.01" [value]="laborRateDraft" (input)="laborRateDraft = +$any($event.target).value" aria-label="Tarifa por hora" required>
+            <button type="submit" class="text-action">+ ADD LABOR</button>
+          </form>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>DESCRIPTION</th><th>HOURS</th><th>RATE</th><th>COST</th><th><span class="visually-hidden">Acciones</span></th></tr></thead>
+              <tbody>
+                @for (item of currentOrder.labor; track item.id) {
+                  <tr>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.hours }}</td>
+                    <td>{{ formatMoney(item.rate) }}/hr</td>
+                    <td>{{ formatMoney(item.hours * item.rate) }}</td>
+                    <td><button type="button" class="remove-button" (click)="removeLabor(item.id)" [attr.aria-label]="'Eliminar mano de obra: ' + item.description">×</button></td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="5" class="empty-row">No hay mano de obra agregada.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="save-row">
+          <span class="save-hint">Los cambios se guardan en esta orden de trabajo.</span>
+          <button type="button" class="button button--primary" (click)="save()" [disabled]="saving()">
+            @if (saving()) { Guardando... } @else { ▣ SAVE STATUS &amp; CHANGES }
+          </button>
+        </div>
+      </div>
+
+      <aside class="workorder-section cost-panel">
+        <div class="section-heading"><h2><span class="heading-icon" aria-hidden="true">▤</span> Summary of Costs</h2></div>
+        <dl class="cost-lines">
+          <div><dt>Parts &amp; Materials</dt><dd>{{ formatMoney(partsSubtotal()) }}</dd></div>
+          <div><dt>Labor</dt><dd>{{ formatMoney(laborSubtotal()) }}</dd></div>
+          <div><dt>Shop Supplies (5%)</dt><dd>{{ formatMoney(supplies()) }}</dd></div>
+          <div><dt>Tax (8.5%)</dt><dd>{{ formatMoney(tax()) }}</dd></div>
+        </dl>
+        <div class="cost-total"><span>TOTAL</span><strong>{{ formatMoney(total()) }}</strong></div>
+        <div class="invoice-lines">
+          <h3>Invoice detail</h3>
+          @for (part of currentOrder.parts; track part.id) {
+            <div><span>{{ part.name }} × {{ part.quantity }}</span><strong>{{ formatMoney(part.quantity * part.unitPrice) }}</strong></div>
+          }
+          @for (item of currentOrder.labor; track item.id) {
+            <div><span>{{ item.description }} · {{ item.hours }} h</span><strong>{{ formatMoney(item.hours * item.rate) }}</strong></div>
+          }
+        </div>
+        <button type="button" class="button button--primary cost-action" (click)="save()" [disabled]="saving()">▣ SAVE STATUS &amp; CHANGES</button>
+        <button type="button" class="button button--invoice" (click)="printInvoice()">♧ Invoice</button>
+      </aside>
+    </div>
+  } @else {
+    <p class="workbench-message workbench-message--error" role="alert">{{ error() || 'No se encontró la orden de trabajo.' }}</p>
+  }
+</main>

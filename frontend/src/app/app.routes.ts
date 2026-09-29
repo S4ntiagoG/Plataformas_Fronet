@@ -54,6 +54,14 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'vehicles/:vehicleId/work-order',
+        title: 'AUTOLOG · Orden de trabajo',
+        loadComponent: () =>
+          import('./features/work-order/work-order.component').then(
+            ({ WorkOrderComponent }) => WorkOrderComponent
+          )
+      },
+      {
         path: 'vehicles',
         title: 'AUTOLOG · Vehículos',
         loadComponent: () =>

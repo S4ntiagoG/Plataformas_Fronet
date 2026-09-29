@@ -165,6 +165,10 @@ export class VehicleListComponent implements OnInit {
       }
       return;
     }
+    if (type === 'SERVICE') {
+      void this.router.navigate(['/vehicles', vehicle.id, 'work-order']);
+      return;
+    }
     this.modalState.set({ type, vehicle });
   }
 

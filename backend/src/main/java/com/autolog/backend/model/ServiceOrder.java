@@ -36,6 +36,12 @@ public class ServiceOrder {
     @Column(nullable = false)
     private Integer currentMileage; // Kilometraje actual (KM/MI)
 
+    @Column(length = 30)
+    private String status = "EN PROGRESO";
+
+    @Column(columnDefinition = "TEXT")
+    private String diagnosis;
+
     @Column(precision = 12, scale = 2)
     private BigDecimal serviceCost; // Costo total registrado para el mantenimiento
 

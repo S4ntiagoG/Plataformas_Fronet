@@ -1,0 +1,660 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.workbench {
+  min-height: 100dvh;
+  padding: 18px 10px 28px;
+  background: #050505;
+  color: #f5f5f5;
+  font-family: inherit;
+}
+
+.workbench-header {
+  display: flex;
+  min-height: 66px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 10px 12px;
+  border-bottom: 1px solid #d32f2f;
+  background: #1e0f0e;
+}
+
+.workbench-title,
+.header-actions,
+.vehicle-caption {
+  display: flex;
+  align-items: center;
+}
+
+.workbench-title {
+  min-width: 0;
+  gap: 10px;
+}
+
+.workbench-title > div {
+  min-width: 0;
+}
+
+.back-button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  border: 1px solid #494949;
+  border-radius: 2px;
+  background: #252525;
+  color: #f3f3f3;
+  cursor: pointer;
+  font: inherit;
+}
+
+.back-button {
+  width: 34px;
+  flex: none;
+}
+
+.back-button svg,
+.button svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.eyebrow,
+.section-meta,
+.text-action,
+.table-section th,
+.cost-lines,
+.invoice-lines {
+  font-family: "Consolas", "Courier New", monospace;
+}
+
+.eyebrow {
+  color: #dedede;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.workbench-header h1 {
+  margin: 5px 0 4px;
+  overflow-wrap: anywhere;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.vehicle-caption {
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  color: #b9b9b9;
+  font-size: 9px;
+}
+
+.vehicle-caption span:first-child {
+  padding: 3px 7px;
+  background: #dedede;
+  color: #111;
+  font-family: "Consolas", "Courier New", monospace;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.header-actions {
+  flex: none;
+  gap: 8px;
+}
+
+.status-control select {
+  min-height: 28px;
+  max-width: 145px;
+  padding: 0 8px;
+  border: 1px solid #a73434;
+  border-radius: 2px;
+  background: #c83232;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.button {
+  padding: 0 10px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.button--primary {
+  border-color: #d32f2f;
+  background: #d32f2f;
+  color: #fff;
+}
+
+.button--primary:hover:not(:disabled),
+.button--invoice:hover {
+  background: #b92323;
+}
+
+.button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.workorder-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(220px, 0.92fr);
+  align-items: start;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.workorder-main {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+.workorder-section {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  background: #1e1e1e;
+}
+
+.section-heading {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 12px;
+  border-bottom: 1px solid #393939;
+}
+
+.section-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #f2f2f2;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.heading-icon {
+  font-size: 14px;
+}
+
+.section-meta {
+  color: #a8a8a8;
+  font-size: 8px;
+}
+
+.diagnosis-input {
+  display: block;
+  width: calc(100% - 28px);
+  min-height: 68px;
+  margin: 10px 14px 0;
+  padding: 10px;
+  resize: vertical;
+  border: 1px solid #4a4a4a;
+  border-radius: 0;
+  background: #202020;
+  color: #eee;
+  font: inherit;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.diagnosis-input:focus,
+.add-row input:focus {
+  outline: 1px solid #d32f2f;
+  outline-offset: -1px;
+}
+
+.customer-reason {
+  margin: 8px 14px 12px;
+  color: #a9a9a9;
+  font-size: 9px;
+}
+
+.customer-reason strong {
+  color: #dedede;
+}
+
+.add-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #343434;
+}
+
+.add-row input {
+  min-width: 0;
+  height: 28px;
+  padding: 0 7px;
+  border: 1px solid #414141;
+  border-radius: 2px;
+  background: #141414;
+  color: #eee;
+  font: inherit;
+  font-size: 10px;
+}
+
+.add-row--task input,
+.add-row--labor input:first-child {
+  flex: 1;
+}
+
+.add-row--part input:first-child {
+  flex: 1.5;
+}
+
+.add-row--part input:nth-child(2) {
+  flex: 1;
+}
+
+.add-row--part input:nth-child(3),
+.add-row--part input:nth-child(4),
+.add-row--labor input:nth-child(2),
+.add-row--labor input:nth-child(3) {
+  width: 76px;
+  flex: none;
+}
+
+.text-action {
+  flex: none;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: #f2f2f2;
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.text-action:hover {
+  color: #ff7777;
+}
+
+.task-list {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 8px 10px 10px;
+  list-style: none;
+}
+
+.task-row {
+  display: flex;
+  min-height: 31px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 8px;
+  border: 1px solid #484848;
+  color: #ddd;
+  font-size: 10px;
+}
+
+.task-label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+
+.task-label span {
+  overflow-wrap: anywhere;
+}
+
+.task-label input {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  accent-color: #36a653;
+}
+
+.task-row--complete .task-label span {
+  color: #aaa;
+}
+
+.remove-button {
+  width: 23px;
+  height: 23px;
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.remove-button:hover {
+  color: #ff7777;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-section table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9px;
+}
+
+.table-section th {
+  padding: 8px 9px;
+  background: #717784;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table-section td {
+  padding: 9px;
+  border-bottom: 1px solid #484848;
+  color: #e2e2e2;
+  vertical-align: middle;
+}
+
+.table-section tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table-section td:not(:first-child):not(:last-child),
+.table-section th:not(:first-child):not(:last-child) {
+  text-align: center;
+}
+
+.table-section td strong,
+.table-section td small {
+  display: block;
+}
+
+.table-section td small {
+  margin-top: 3px;
+  color: #aaa;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 8px;
+}
+
+.empty-row {
+  padding: 12px !important;
+  color: #999 !important;
+  text-align: center !important;
+}
+
+.cost-panel {
+  padding-bottom: 12px;
+}
+
+.cost-panel .section-heading {
+  margin-bottom: 10px;
+}
+
+.cost-lines {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0 12px 12px;
+  font-size: 8px;
+}
+
+.cost-lines > div,
+.invoice-lines > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cost-lines dt,
+.cost-lines dd {
+  margin: 0;
+}
+
+.cost-lines dt {
+  color: #ddd;
+}
+
+.cost-lines dd {
+  color: #fff;
+  white-space: nowrap;
+}
+
+.cost-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 12px 14px;
+  padding-top: 10px;
+  border-top: 1px solid #4a4a4a;
+  font-size: 10px;
+}
+
+.cost-total strong {
+  font-size: 20px;
+}
+
+.invoice-lines {
+  display: grid;
+  gap: 7px;
+  margin: 0 12px 13px;
+  padding-top: 8px;
+  border-top: 1px solid #393939;
+  font-size: 8px;
+}
+
+.invoice-lines h3 {
+  margin: 0;
+  color: #aaa;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.invoice-lines span {
+  min-width: 0;
+  color: #d3d3d3;
+  overflow-wrap: anywhere;
+}
+
+.invoice-lines strong {
+  flex: none;
+  color: #fff;
+}
+
+.cost-action,
+.button--invoice {
+  display: flex;
+  width: calc(100% - 24px);
+  margin: 0 12px 8px;
+}
+
+.button--invoice {
+  width: auto;
+  min-width: 96px;
+  margin: 0 auto;
+  border-color: #d32f2f;
+  background: #d32f2f;
+  text-transform: none;
+}
+
+.save-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.save-hint {
+  color: #999;
+  font-size: 9px;
+}
+
+.feedback,
+.workbench-message {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #414141;
+  background: #1e1e1e;
+  font-size: 11px;
+}
+
+.feedback--error,
+.workbench-message--error {
+  border-color: #8d2f2f;
+  color: #ffb4b4;
+}
+
+.feedback--success {
+  border-color: #267a3b;
+  color: #9ce8ae;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 1000px) {
+  .workorder-layout {
+    grid-template-columns: minmax(0, 1.5fr) minmax(205px, 0.8fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .workbench {
+    padding: 12px 10px 22px;
+  }
+
+  .workbench-header {
+    align-items: flex-start;
+  }
+
+  .workorder-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cost-panel {
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  .workbench-header {
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .add-row--part,
+  .add-row--labor {
+    flex-wrap: wrap;
+  }
+
+  .add-row--part input:first-child,
+  .add-row--labor input:first-child {
+    flex-basis: 100%;
+  }
+
+  .save-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media print {
+  .workbench {
+    min-height: 0;
+    padding: 0;
+    background: #fff;
+    color: #111;
+  }
+
+  .workbench-header,
+  .header-actions,
+  .add-row,
+  .remove-button,
+  .save-row,
+  .feedback {
+    display: none !important;
+  }
+
+  .workorder-layout {
+    display: block;
+    margin: 0;
+  }
+
+  .workorder-main,
+  .cost-panel {
+    display: block;
+    overflow: visible;
+    border-color: #aaa;
+    background: #fff;
+    color: #111;
+  }
+
+  .workorder-main > .workorder-section,
+  .cost-panel {
+    margin-bottom: 12px;
+    break-inside: avoid;
+  }
+
+  .invoice-print-mode .workorder-main {
+    display: none;
+  }
+
+  .invoice-print-mode .cost-panel {
+    border: 0;
+  }
+
+  .section-heading h2,
+  .table-section td,
+  .cost-lines dt,
+  .cost-lines dd,
+  .invoice-lines span,
+  .invoice-lines strong,
+  .customer-reason,
+  .cost-total {
+    color: #111;
+  }
+
+  .table-section th {
+    background: #ddd;
+    color: #111;
+  }
+
+  .diagnosis-input {
+    border-color: #aaa;
+    background: #fff;
+    color: #111;
+  }
+}

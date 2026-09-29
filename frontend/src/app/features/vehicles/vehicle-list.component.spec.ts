@@ -100,6 +100,14 @@ describe('VehicleListComponent', () => {
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
+  it('navigates to the workshop work order for the selected vehicle', () => {
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+
+    component.openActionModal('SERVICE', MOCK_ITEMS[1]);
+    expect(router.navigate).toHaveBeenCalledWith(['/vehicles', 2, 'work-order']);
+  });
+
   it('updates vehicle status successfully', () => {
     component.updateVehicleStatus(1, 'EN PROGRESO');
     const updated = component.allVehicles().find((v) => v.id === 1);

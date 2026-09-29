@@ -254,7 +254,9 @@
 }
 
 .service-label {
-  display: inline-block;
+  display: block;
+  width: 100%;
+  min-width: 0;
   color: #eef1f3;
   font-size: 0.92rem;
   font-weight: 600;
