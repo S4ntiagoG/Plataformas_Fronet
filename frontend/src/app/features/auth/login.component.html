@@ -1,0 +1,56 @@
+<main class="flex min-h-screen items-center justify-center bg-neutral-950 px-5 py-10 text-neutral-100">
+  <section class="w-full max-w-md border border-neutral-800 border-t-2 border-t-red-600 bg-neutral-900 p-7 shadow-2xl sm:p-9">
+    <p class="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-500">Ciclo Motor · AUTOLOG</p>
+    <h1 class="text-2xl font-bold text-white">Acceso al taller</h1>
+    <p class="mt-2 text-sm text-neutral-400">Ingresa con tu usuario o código de mecánico.</p>
+
+    @if (errorMessage()) {
+      <div class="mt-6 border border-red-900 bg-red-950/50 p-3 text-sm text-red-200" role="alert">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form class="mt-7 space-y-5" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-neutral-200" for="username">Usuario o correo</label>
+        <input
+          id="username"
+          class="w-full border border-neutral-700 bg-neutral-950 px-3 py-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500"
+          formControlName="username"
+          autocomplete="username"
+          required
+        />
+        @if (form.controls.username.touched && form.controls.username.invalid) {
+          <p class="mt-1 text-xs text-red-300">Ingresa tu usuario.</p>
+        }
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-neutral-200" for="password">Contraseña</label>
+        <input
+          id="password"
+          class="w-full border border-neutral-700 bg-neutral-950 px-3 py-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          required
+        />
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <p class="mt-1 text-xs text-red-300">Ingresa tu contraseña.</p>
+        }
+      </div>
+
+      <button
+        class="w-full bg-red-700 px-4 py-3 text-sm font-bold text-white transition hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 disabled:cursor-wait disabled:opacity-60"
+        type="submit"
+        [disabled]="loading()"
+      >
+        {{ loading() ? 'Ingresando…' : 'Iniciar sesión' }}
+      </button>
+    </form>
+
+    <a class="mt-6 inline-block text-sm text-neutral-400 underline decoration-neutral-600 underline-offset-4 hover:text-white" routerLink="/client/search">
+      Ir al portal del cliente
+    </a>
+  </section>
+</main>

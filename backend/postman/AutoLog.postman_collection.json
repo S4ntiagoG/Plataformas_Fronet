@@ -1,16 +1,45 @@
 {
   "info": {
     "name": "AutoLog API",
-    "description": "Pruebas de clientes, vehiculos y ordenes de servicio. Ejecutar en orden.",
+    "description": "Pruebas autenticadas de clientes, vehiculos y ordenes de servicio. Configura authUsername y authPassword en el entorno activo.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
   },
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "accessToken", "value": "" },
     { "key": "clientId", "value": "" },
     { "key": "vehicleId", "value": "" },
     { "key": "serviceOrderId", "value": "" }
   ],
   "item": [
+    {
+      "name": "POST - Iniciar sesion",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{authUsername}}\",\n  \"password\": \"{{authPassword}}\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/login"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Inicio de sesion correcto', function () { pm.response.to.have.status(200); });",
+            "if (pm.response.code === 200) { pm.collectionVariables.set('accessToken', pm.response.json().accessToken); }"
+          ],
+          "type": "text/javascript"
+        }
+      }]
+    },
     {
       "name": "POST - Crear cliente",
       "request": {

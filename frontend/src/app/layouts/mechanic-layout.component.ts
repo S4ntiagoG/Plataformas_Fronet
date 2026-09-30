@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+import { AuthService } from '../core/auth/auth.service';
 
 @Component({
   selector: 'app-mechanic-layout',
@@ -8,4 +10,10 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   templateUrl: './mechanic-layout.component.html',
   styleUrl: './mechanic-layout.component.css'
 })
-export class MechanicLayoutComponent {}
+export class MechanicLayoutComponent {
+  private readonly authService = inject(AuthService);
+
+  logout(): void {
+    this.authService.logout();
+  }
+}

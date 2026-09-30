@@ -1,3 +1,14 @@
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  tokenType: 'Bearer';
+  expiresInSeconds: number;
+}
+
 export interface ClientRequest {
   name: string;
   identificationNumber: string;

@@ -1,5 +1,6 @@
 export const API_CONFIG = {
   baseUrl: '/api',
+  authPath: '/auth',
   clientsPath: '/clients',
   vehiclesPath: '/vehicles',
   vehicleSearchPath: '/vehicles/search',

@@ -50,8 +50,11 @@ export class VehicleMechanicService {
             brand: v.brand,
             model: v.model,
             vehicleYear: v.vehicleYear,
+            chassisNumber: v.chassisNumber,
             ownerName: v.client?.name || 'Propietario no asignado',
             lastServiceDate,
+            serviceOrderDate: latestOrder?.entryDate ?? null,
+            primaryReason: latestOrder?.primaryReason ?? null,
             status
           };
         });

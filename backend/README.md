@@ -36,7 +36,27 @@ La base de datos queda disponible en `localhost:5432` con estos datos:
 - Usuario: `autolog`
 - Contrasena: `autolog1234`
 
-### 2. Ejecutar el backend
+### 2. Configurar autenticación
+
+El taller requiere una cuenta `Admin` o `Mecanico`. Para crear un administrador inicial cuando aún no exista, configura estas variables en la misma terminal desde la que iniciarás Spring Boot:
+
+```powershell
+$env:AUTOLOG_AUTH_USERNAME = Read-Host "Usuario administrador"
+$env:AUTOLOG_AUTH_PASSWORD = Read-Host "Contrasena administrador"
+$secretBytes = New-Object byte[] 32
+$random = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$random.GetBytes($secretBytes)
+$env:AUTOLOG_JWT_SECRET = [Convert]::ToBase64String($secretBytes)
+$random.Dispose()
+```
+
+Guarda `AUTOLOG_JWT_SECRET` en el entorno local para conservar la validez de los tokens al reiniciar el backend. La cuenta se crea solo si el usuario todavía no existe; las contraseñas legadas de administradores y mecánicos se convierten a BCrypt al iniciar.
+
+Para provisionar mecánicos de demostración, configura `AUTOLOG_DEMO_MECHANICS` como un arreglo JSON de objetos con `codigoMecanico`, `nombre` y `password`. Al iniciar, se insertan los códigos que no existan y se almacenan las contraseñas con BCrypt; las cuentas existentes no se sobrescriben. No guardes esta variable en el repositorio.
+
+Inicia sesión con `POST /api/auth/login` y envía el token como `Authorization: Bearer <accessToken>` en las rutas del taller. El login, la búsqueda pública `POST /api/vehicles/search` y el historial público del portal quedan disponibles sin token.
+
+### 3. Ejecutar el backend
 
 En otra terminal, desde la misma carpeta:
 
@@ -56,27 +76,44 @@ La API queda disponible en:
 http://localhost:8080
 ```
 
-### 3. Probar con Postman
+### 4. Probar con Postman
 
 Importar el archivo `postman/AutoLog.postman_collection.json` en Postman.
+En el entorno activo, crea `authUsername` y `authPassword` con las credenciales del administrador o mecánico.
 
 Ejecutar las solicitudes en este orden:
 
-1. `POST - Crear cliente`
-2. `GET - Listar clientes`
-3. `GET - Buscar cliente creado`
-4. `POST - Crear vehiculo`
-5. `GET - Listar vehiculos`
-6. `GET - Buscar vehiculo creado`
-7. `POST - Crear orden de servicio`
-8. `GET - Listar ordenes`
-9. `GET - Buscar orden creada`
+1. `POST - Iniciar sesion`
+2. `POST - Crear cliente`
+3. `GET - Listar clientes`
+4. `GET - Buscar cliente creado`
+5. `POST - Crear vehiculo`
+6. `GET - Listar vehiculos`
+7. `GET - Buscar vehiculo creado`
+8. `POST - Crear orden de servicio`
+9. `GET - Listar ordenes`
+10. `GET - Buscar orden creada`
 
 La coleccion guarda automaticamente los IDs creados en las variables `clientId`, `vehicleId` y `serviceOrderId`. Por eso no es necesario escribir IDs manualmente.
 
 ## Requests manuales
 
 En todos los `POST`, seleccionar `Body > raw > JSON` y agregar el header `Content-Type: application/json`.
+
+### Iniciar sesión
+
+```text
+POST http://localhost:8080/api/auth/login
+```
+
+```json
+{
+	"username": "<usuario-admin-o-codigo-mecanico>",
+	"password": "<contrasena>"
+}
+```
+
+Usa `accessToken` de la respuesta como Bearer token para las operaciones protegidas.
 
 ### Crear cliente
 
@@ -194,6 +231,7 @@ La respuesta contiene las órdenes del vehículo ordenadas de forma descendente 
 
 | Metodo | Ruta | Resultado esperado |
 |---|---|---|
+| POST | `/api/auth/login` | JWT Bearer; `401 Unauthorized` con credenciales inválidas |
 | GET | `/api/clients` | Lista de clientes |
 | POST | `/api/clients` | `201 Created`; crea o reutiliza por correo/documento |
 | GET | `/api/clients/{id}` | Cliente por ID |

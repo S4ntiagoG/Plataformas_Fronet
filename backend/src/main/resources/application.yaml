@@ -16,3 +16,11 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+autolog:
+  auth:
+    bootstrap-admin-username: ${AUTOLOG_AUTH_USERNAME:}
+    bootstrap-admin-password: ${AUTOLOG_AUTH_PASSWORD:}
+    demo-mechanics: '${AUTOLOG_DEMO_MECHANICS:[]}'
+    jwt-secret: ${AUTOLOG_JWT_SECRET:}
+    token-lifetime-minutes: 60

@@ -6,7 +6,8 @@ import { MechanicVehicleItem, VehicleStatus } from '../vehicles/models/vehicle-m
 import { VehicleMechanicService } from '../vehicles/services/vehicle-mechanic.service';
 
 interface ActivityItem {
-  time: string;
+  orderId: number;
+  date: string;
   label: string;
   description: string;
   tone: 'red' | 'yellow' | 'green' | 'orange';
@@ -30,39 +31,26 @@ export class DashboardComponent implements OnInit {
     const list = this.vehicles();
     return {
       activeServices: list.filter((vehicle) => vehicle.status !== 'LISTO').length,
-      pendingTasks: list.filter((vehicle) => vehicle.status === 'PENDIENTE').length,
-      completedToday: list.filter((vehicle) => vehicle.status === 'LISTO').length
+      pendingOrders: list.filter((vehicle) => vehicle.status === 'PENDIENTE').length,
+      readyVehicles: list.filter((vehicle) => vehicle.status === 'LISTO').length
     };
   });
 
   readonly visibleVehicles = computed(() => this.vehicles().slice(0, 4));
 
-  readonly recentActivity: ActivityItem[] = [
-    {
-      time: '19:45 AM',
-      label: 'Diagnóstico Finalizado',
-      description: 'BMW M3 - Transmission issue identified. Quote generated.',
-      tone: 'red'
-    },
-    {
-      time: '09:30 AM',
-      label: 'Servicio Listo',
-      description: 'Ford Transit - Oil change complete. Ready for pickup.',
-      tone: 'green'
-    },
-    {
-      time: '08:15 AM',
-      label: 'Piezas Pendientes',
-      description: 'Audi Q5 - Brake pads ordered from main supplier. ETA: 2PM.',
-      tone: 'yellow'
-    },
-    {
-      time: '07:30 AM',
-      label: 'Workshop Opened',
-      description: 'System initialized. Daily sync complete.',
-      tone: 'orange'
-    }
-  ];
+  readonly recentActivity = computed<ActivityItem[]>(() => this.vehicles()
+    .filter((vehicle): vehicle is MechanicVehicleItem & { serviceOrderId: number; serviceOrderDate: string } =>
+      vehicle.serviceOrderId !== null && vehicle.serviceOrderDate !== null
+    )
+    .sort((left, right) => right.serviceOrderDate.localeCompare(left.serviceOrderDate))
+    .slice(0, 4)
+    .map((vehicle) => ({
+      orderId: vehicle.serviceOrderId,
+      date: this.formatDate(vehicle.serviceOrderDate),
+      label: `Orden de servicio #${vehicle.serviceOrderId}`,
+      description: `${vehicle.brand} ${vehicle.model} · ${vehicle.plate} · ${vehicle.primaryReason || 'Motivo no registrado'}`,
+      tone: this.activityTone(vehicle.status)
+    })));
 
   ngOnInit(): void {
     this.loadDashboard();
@@ -87,14 +75,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getVehicleServiceLabel(vehicle: MechanicVehicleItem): string {
-    const status = vehicle.status;
-    const serviceMap: Record<VehicleStatus, string> = {
-      LISTO: 'Cambio de Aceite y Filtros',
-      'EN PROGRESO': 'Reparación General de Transmisión',
-      PENDIENTE: 'Cambio de Pastillas de Freno'
-    };
-
-    return serviceMap[status];
+    return vehicle.primaryReason || 'Sin orden de servicio';
   }
 
   getStatusClass(status: VehicleStatus): string {
@@ -105,5 +86,19 @@ export class DashboardComponent implements OnInit {
     };
 
     return classes[status];
+  }
+
+  private formatDate(date: string): string {
+    const [year, month, day] = date.split('-').map(Number);
+    return new Intl.DateTimeFormat('es-CO').format(new Date(year, month - 1, day));
+  }
+
+  private activityTone(status: VehicleStatus): ActivityItem['tone'] {
+    const tones: Record<VehicleStatus, ActivityItem['tone']> = {
+      LISTO: 'green',
+      'EN PROGRESO': 'orange',
+      PENDIENTE: 'yellow'
+    };
+    return tones[status];
   }
 }

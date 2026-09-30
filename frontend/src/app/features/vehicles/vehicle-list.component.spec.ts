@@ -14,9 +14,12 @@ const MOCK_ITEMS: MechanicVehicleItem[] = [
     brand: 'Toyota',
     model: 'Corolla',
     vehicleYear: 2022,
+    chassisNumber: 'VIN-TOY-001',
     color: 'Silver',
     ownerName: 'Michael Johnson',
     lastServiceDate: '12/05/2023',
+    serviceOrderDate: '2023-05-12',
+    primaryReason: 'Mantenimiento preventivo',
     status: 'LISTO'
   },
   {
@@ -26,9 +29,12 @@ const MOCK_ITEMS: MechanicVehicleItem[] = [
     brand: 'Honda',
     model: 'Civic',
     vehicleYear: 2020,
+    chassisNumber: 'VIN-HON-002',
     color: 'Black',
     ownerName: 'Sarah Williams',
     lastServiceDate: '20/09/2023',
+    serviceOrderDate: '2023-09-20',
+    primaryReason: 'Revisión de frenos',
     status: 'EN PROGRESO'
   },
   {
@@ -38,9 +44,12 @@ const MOCK_ITEMS: MechanicVehicleItem[] = [
     brand: 'Ford',
     model: 'F-150',
     vehicleYear: 2019,
+    chassisNumber: 'VIN-FOR-003',
     color: 'White',
     ownerName: 'David Smith',
     lastServiceDate: '-- / -- / ----',
+    serviceOrderDate: null,
+    primaryReason: null,
     status: 'PENDIENTE'
   }
 ];

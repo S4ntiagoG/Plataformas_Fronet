@@ -1,10 +1,20 @@
 import { Routes } from '@angular/router';
 
+import { mechanicAuthGuard } from './core/auth/auth.guard';
+
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     redirectTo: 'dashboard'
+  },
+  {
+    path: 'login',
+    title: 'AUTOLOG · Iniciar sesión',
+    loadComponent: () =>
+      import('./features/auth/login.component').then(
+        ({ LoginComponent }) => LoginComponent
+      )
   },
   {
     path: 'client/search',
@@ -24,6 +34,7 @@ export const routes: Routes = [
   },
   {
     path: '',
+    canActivate: [mechanicAuthGuard],
     loadComponent: () =>
       import('./layouts/mechanic-layout.component').then(
         ({ MechanicLayoutComponent }) => MechanicLayoutComponent
