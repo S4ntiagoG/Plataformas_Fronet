@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { WorkOrderResponse } from '../../core/models/api.models';
@@ -37,11 +37,14 @@ describe('WorkOrderComponent', () => {
   let fixture: ComponentFixture<WorkOrderComponent>;
   let component: WorkOrderComponent;
   let workOrderService: jasmine.SpyObj<WorkOrderService>;
+  let router: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     workOrderService = jasmine.createSpyObj<WorkOrderService>('WorkOrderService', ['getForVehicle', 'update']);
     workOrderService.getForVehicle.and.returnValue(of(MOCK_ORDER));
     workOrderService.update.and.returnValue(of(MOCK_ORDER));
+    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router.navigate.and.returnValue(Promise.resolve(true));
 
     await TestBed.configureTestingModule({
       imports: [WorkOrderComponent],
@@ -51,7 +54,7 @@ describe('WorkOrderComponent', () => {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: convertToParamMap({ vehicleId: '7' }) } }
         },
-        provideRouter([])
+        { provide: Router, useValue: router }
       ]
     }).compileComponents();
 
